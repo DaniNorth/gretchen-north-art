@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
 pillow = "*"
 cloudinary = "*"
 django-cloudinary-storage = "*"
 python-dotenv = "*"
+django = "*"
 
 [dev-packages]
 
