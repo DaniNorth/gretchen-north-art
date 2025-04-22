@@ -11,6 +11,7 @@ django-cloudinary-storage = "*"
 python-dotenv = "*"
 django-tailwind = "==3.3.0"
 dj-database-url = "*"
+gunicorn = "*"
 
 [dev-packages]
 
