@@ -25,6 +25,9 @@ yarn-error.log
 # === Tailwind Output (Compiled CSS) ===
 theme/static/css/output.css
 
+# === Collected Static Files ===
+staticfiles/
+
 # === VS Code ===
 .vscode/
 
