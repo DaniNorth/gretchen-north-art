@@ -32,8 +32,9 @@ SECRET_KEY = os.getenv("SECRET_KEY", "fallback-key-if-missing")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
-if not DEBUG:
-    ALLOWED_HOSTS += ["render-url-placeholder.onrender.com"]
+RENDER_DOMAIN = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_DOMAIN:
+    ALLOWED_HOSTS.append(RENDER_DOMAIN)
 
 # Application definition
 
