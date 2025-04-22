@@ -9,6 +9,7 @@ django = "*"
 cloudinary = "*"
 django-cloudinary-storage = "*"
 python-dotenv = "*"
+django-tailwind = "==3.3.0"
 
 [dev-packages]
 
