@@ -5,13 +5,22 @@ __pycache__/
 db.sqlite3
 *.log
 
-# === Virtual Environments ===
-venv/
-.env/
+# === Environment Variables ===
 .env
+.env/
 
-# === Pipenv Files ===
-#Pipfile.lock
+# === Virtual Environment ===
+venv/
+
+# === Pipenv ===
+Pipfile.lock
+
+# === Node ===
+node_modules/
+*.log
+
+# === Tailwind Output ===
+theme/static/css/output.css
 
 # === VS Code ===
 .vscode/
@@ -19,5 +28,5 @@ venv/
 # === macOS ===
 .DS_Store
 
-# === Cloudinary (safety) ===
+# === Cloudinary ===
 cloudinary.*
