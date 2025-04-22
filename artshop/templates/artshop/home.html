@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Home | Gretchen North Art{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-heading-text mb-6">Featured Artworks</h1>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  {% for art in artworks %}
+    <div class="bg-container-background rounded-xl shadow-md overflow-hidden">
+      <img src="{{ art.image.url }}" alt="{{ art.title }}" class="w-full h-60 object-cover">
+      <div class="p-4">
+        <h2 class="text-xl font-semibold text-heading-text mb-1">
+          <a href="{% url 'artwork_detail' art.pk %}" class="hover:underline text-link hover:text-link-hover">
+            {{ art.title }}
+          </a>
+        </h2>
+        <p class="text-subheading text-sm mb-2">{{ art.category }}</p>
+        <p class="text-paragraph-text text-lg font-bold">${{ art.price }}</p>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-secondary-subheading">No artworks available right now. Check back soon!</p>
+  {% endfor %}
+</div>
+{% endblock %}
