@@ -6,13 +6,13 @@ from datetime import timedelta
 from django.apps import apps
 
 class Artwork(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, blank=True, null=True)
     image = CloudinaryField('image')
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.CharField(max_length=100)
-    medium = models.CharField(max_length=100)
-    collection = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
+    category = models.CharField(max_length=100, blank=True, null=True)
+    medium = models.CharField(max_length=100, blank=True, null=True)
+    collection = models.CharField(max_length=200, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     
     is_active = models.BooleanField(default=True)
     is_sold = models.BooleanField(default=False)
