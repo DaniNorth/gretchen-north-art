@@ -1,11 +1,42 @@
 {% extends "base.html" %}
+{% load socialaccount %}
+
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">Login to your account</h1>
-<form method="post" class="space-y-4 max-w-md">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="bg-button text-white px-4 py-2 rounded">Login</button>
-</form>
+<div class="max-w-md mx-auto mt-10 p-6 bg-container-background rounded-xl shadow-md">
+  <h1 class="text-2xl font-bold mb-4 text-heading-text">Log in to your account</h1>
+
+  {% if form.errors %}
+    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+      Please correct the error{{ form.errors|length > 1|yesno:"s," }} below.
+    </div>
+  {% endif %}
+
+  <form method="post" class="space-y-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="bg-button hover:bg-button-hover text-white font-semibold py-2 px-4 rounded">
+      Log in
+    </button>
+  </form>
+
+  <p class="text-sm mt-4 text-paragraph-text">
+    Don’t have an account?
+    <a href="{% url 'account_signup' %}" class="text-link hover:text-link-hover">Sign up here</a>.
+  </p>
+
+  {% if socialaccount_providers %}
+    <hr class="my-6 border-color">
+    <p class="text-sm text-subheading mb-2">Or log in with:</p>
+    <div class="space-y-2">
+      {% for provider in socialaccount_providers %}
+        <a href="{% provider_login_url provider.id %}" class="block w-full text-center bg-gray-100 hover:bg-gray-200 text-heading-text font-medium py-2 px-4 rounded">
+          {{ provider.name }}
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
 {% endblock %}
