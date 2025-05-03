@@ -156,3 +156,4 @@ CLOUDINARY_STORAGE = {
 
 TAILWIND_APP_NAME = 'theme'
 
+LOGIN_URL = '/accounts/login/'
