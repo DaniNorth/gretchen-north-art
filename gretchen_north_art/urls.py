@@ -17,12 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from allauth.account.views import LoginView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("artshop.urls")),
-    path("accounts/login/", auth_views.LoginView.as_view(), name="login"),  # ← explicitly name it
-    path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("accounts/login/", LoginView.as_view(), name="account_login"),
     path("accounts/", include("allauth.urls")),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
