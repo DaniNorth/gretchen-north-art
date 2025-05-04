@@ -19,7 +19,7 @@ def artwork_detail(request, pk):
 
     remaining_hold = None
     if art.is_held and art.held_by == request.user:
-        remaining_hold = art.hold_expires_at.isoformat()
+        remaining_hold = art.hold_expires_at
 
     return render(request, "artshop/artwork_detail.html", {
         "art": art,
@@ -66,3 +66,18 @@ def add_to_cart(request, pk):
     )
     return redirect("artwork_detail", pk=artwork.pk)
 
+@login_required
+def cart_view(request):
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    items = cart.items.select_related('artwork')
+    total = cart.total_price()
+
+    return render(request, "artshop/cart.html", {
+        "cart": cart,
+        "items": items,
+        "total": total
+    })
+
+@login_required
+def checkout_view(request):
+    return render(request, "artshop/checkout.html")
