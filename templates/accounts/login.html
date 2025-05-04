@@ -7,11 +7,15 @@
 <div class="max-w-md mx-auto mt-10 p-6 bg-container-background rounded-xl shadow-md">
   <h1 class="text-2xl font-bold mb-4 text-heading-text">Log in to your account</h1>
 
-  {% if form.errors %}
-    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
-      Please correct the error{{ form.errors|length > 1|yesno:"s," }} below.
-    </div>
-  {% endif %}
+  {% if form.errors|length > 1 %}
+  <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+    Please correct the errors below.
+  </div>
+{% elif form.errors %}
+  <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+    Please correct the error below.
+  </div>
+{% endif %}
 
   <form method="post" class="space-y-4">
     {% csrf_token %}
