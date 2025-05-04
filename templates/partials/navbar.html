@@ -7,9 +7,10 @@
 
     {% if user.is_authenticated %}
       <a href="#" class="text-link hover:text-link-hover">My Profile</a>
-      <a href="{% url 'logout' %}" class="text-link hover:text-link-hover">Logout</a>
+      <a href="{% url 'account_logout' %}" class="text-link hover:text-link-hover">Logout</a>
     {% else %}
-      <a href="{% url 'login' %}" class="text-link hover:text-link-hover">Login</a>
+      <a href="{% url 'account_login' %}" class="text-link hover:text-link-hover">Login</a>
     {% endif %}
   </div>
 </nav>
+jj
