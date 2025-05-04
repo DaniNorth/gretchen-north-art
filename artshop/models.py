@@ -13,7 +13,8 @@ class Artwork(models.Model):
     medium = models.CharField(max_length=100, blank=True, null=True)
     collection = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    
+    quantity = models.PositiveIntegerField(default=1)
+
     is_active = models.BooleanField(default=True)
     is_sold = models.BooleanField(default=False)
 
@@ -31,6 +32,9 @@ class Artwork(models.Model):
     @property
     def is_held(self):
         return self.held_by is not None and self.hold_expires_at and self.hold_expires_at > timezone.now()
+
+    def is_available(self):
+        return not self.is_sold and not self.is_held and self.quantity > 0
 
     def hold(self, user):
         self.held_by = user
@@ -59,18 +63,22 @@ class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def total_price(self):
+        return sum(item.artwork.price * item.quantity for item in self.items.all())
+
     def __str__(self):
         return f"{self.user.username}'s Cart"
 
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
-    artwork = models.OneToOneField(Artwork, on_delete=models.CASCADE)
+    artwork = models.ForeignKey(Artwork, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
     added_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.artwork.title} in {self.cart.user.username}'s cart"
-    
+        return f"{self.artwork.title} x{self.quantity} in {self.cart.user.username}'s cart"
+
 
 class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlists')
@@ -88,7 +96,7 @@ class WishlistItem(models.Model):
 
     def __str__(self):
         return f"{self.artwork.title} in {self.wishlist.title}"
-    
+
 
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
