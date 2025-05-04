@@ -7,7 +7,7 @@
   </p>
 
   <script>
-    const holdExpiresAt = new Date("{{ remaining_hold }}");
+     const holdExpiresAt = new Date("{{ remaining_hold|date:'c' }}");
     const timerElement = document.getElementById("timer");
 
     function updateTimer() {
