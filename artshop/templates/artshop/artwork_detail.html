@@ -1,0 +1,41 @@
+<h1 class="text-2xl font-bold">{{ art.title }}</h1>
+<p class="text-lg">{{ art.price }}</p>
+
+{% if remaining_hold %}
+  <p class="text-yellow-600 mt-2 font-semibold">
+    You have this on hold for <span id="timer">{{ remaining_hold|timesince }} more</span>.
+  </p>
+
+  <script>
+    const holdExpiresAt = new Date("{{ remaining_hold }}");
+    const timerElement = document.getElementById("timer");
+
+    function updateTimer() {
+      const now = new Date();
+      const diff = holdExpiresAt - now;
+
+      if (diff <= 0) {
+        timerElement.innerText = "expired";
+        return;
+      }
+
+      const minutes = Math.floor(diff / 1000 / 60);
+      const seconds = Math.floor((diff / 1000) % 60).toString().padStart(2, "0");
+      timerElement.innerText = `${minutes}m ${seconds}s remaining`;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  </script>
+{% endif %}
+
+<p class="mt-4">{{ art.description }}</p>
+
+{% if user.is_authenticated %}
+  <form method="post" action="{% url 'add_to_cart' art.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn">Add to Cart</button>
+  </form>
+{% else %}
+  <a href="{% url 'account_login' %}" class="btn">Log in to purchase</a>
+{% endif %}
