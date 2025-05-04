@@ -3,6 +3,7 @@
 
   <div class="space-x-4">
     <a href="/" class="text-link hover:text-link-hover">Home</a>
+    <a href="{% url 'cart' %}" class="text-link hover:text-link-hover">Cart</a>
     <a href="/admin/" class="text-link hover:text-link-hover">Admin</a>
 
     {% if user.is_authenticated %}
