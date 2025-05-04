@@ -2,12 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from .models import CustomerProfile
+from .forms import CustomerProfileForm
 
 from .models import Artwork, Cart, CartItem
 
 def home(request):
     artworks = Artwork.objects.all()
-    # Clear expired holds for display
     for art in artworks:
         art.clear_hold_if_expired()
     return render(request, "artshop/home.html", {"artworks": artworks})
@@ -15,7 +16,29 @@ def home(request):
 def artwork_detail(request, pk):
     art = get_object_or_404(Artwork, pk=pk)
     art.clear_hold_if_expired()
-    return render(request, "artshop/artwork_detail.html", {"art": art})
+
+    remaining_hold = None
+    if art.is_held and art.held_by == request.user:
+        remaining_hold = art.hold_expires_at.isoformat()
+
+    return render(request, "artshop/artwork_detail.html", {
+        "art": art,
+        "remaining_hold": remaining_hold,
+    })
+
+@login_required
+def edit_profile(request):
+    profile, created = CustomerProfile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        form = CustomerProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = CustomerProfileForm(instance=profile)
+
+    return render(request, 'artshop/edit_profile.html', {'form': form})
 
 @login_required
 def add_to_cart(request, pk):
@@ -26,16 +49,20 @@ def add_to_cart(request, pk):
         messages.error(request, "This artwork has already been sold.")
         return redirect("home")
 
-    if artwork.is_held and artwork.held_by != request.user:
-        messages.warning(request, "This artwork is currently on hold for another customer.")
-        return redirect("home")
+    if artwork.is_held and artwork.held_by == request.user:
+        remaining_hold = artwork.hold_expires_at.isoformat()
+    else:
+        remaining_hold = None
 
-    # Get or create the user's cart
     cart, _ = Cart.objects.get_or_create(user=request.user)
 
-    # Add artwork to cart or refresh the hold
     artwork.hold(request.user)
+
     CartItem.objects.get_or_create(cart=cart, artwork=artwork)
 
-    messages.success(request, f"'{artwork.title}' has been added to your cart. You've got 15 minutes to check out.")
-    return redirect("home")
+    messages.success(
+        request,
+        f"'{artwork.title}' has been added to your cart. You have 15 minutes to check out."
+    )
+    return redirect("artwork_detail", pk=artwork.pk)
+
