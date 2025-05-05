@@ -1,5 +1,5 @@
 from django import forms
-from .models import CustomerProfile
+from .models import CustomerProfile, Wishlist
 
 class CustomerProfileForm(forms.ModelForm):
     class Meta:
@@ -16,3 +16,9 @@ class CustomerProfileForm(forms.ModelForm):
         widgets = {
             'address': forms.Textarea(attrs={'rows': 2}),
         }
+
+
+class WishlistForm(forms.ModelForm):
+    class Meta:
+        model = Wishlist
+        fields = ['title']
