@@ -4,6 +4,45 @@
 {% block content %}
   <div class="max-w-xl mx-auto mt-10">
     <h1 class="text-2xl font-bold mb-4">Checkout</h1>
-    <p>This is your checkout page. Payment integration coming soon!</p>
+        <script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+
+        <div id="card-container"></div>
+        <button id="card-button">Pay</button>
+
+        <script>
+        const payments = Square.payments('YOUR_APPLICATION_ID', 'sandbox'); // or 'production'
+
+        async function main() {
+            const card = await payments.card();
+            await card.attach('#card-container');
+
+            document.getElementById('card-button').addEventListener('click', async function () {
+            const result = await card.tokenize();
+            if (result.status === 'OK') {
+                const token = result.token;
+
+                const res = await fetch('/checkout/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ source_id: token })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                window.location.href = '/checkout-complete/';
+                } else {
+                alert('Payment failed');
+                }
+            } else {
+                alert('Tokenization failed');
+            }
+            });
+        }
+
+        main();
+        </script>
   </div>
 {% endblock %}
