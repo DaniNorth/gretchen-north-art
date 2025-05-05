@@ -6,8 +6,8 @@ from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import CustomerProfile, Artwork, Cart, CartItem
-from .forms import CustomerProfileForm
+from .models import CustomerProfile, Artwork, Cart, CartItem, Wishlist
+from .forms import CustomerProfileForm, WishlistForm
 from artshop.square_client import client
 from square.core.api_error import ApiError
 
@@ -74,7 +74,6 @@ def cart_view(request):
     })
 
 #Sqaure checkout logic, remember to update the .env sqaure access token to Gretchens once in production
-
 @login_required
 def checkout_view(request):
     try:
@@ -128,3 +127,30 @@ def checkout_complete_view(request):
         item.artwork.mark_sold(request.user)
         item.delete()
     return render(request, "artshop/checkout_complete.html")
+
+@login_required
+def profile_view(request):
+    profile = request.user.profile
+    wishlists = request.user.wishlists.all()
+    purchases = Artwork.objects.filter(purchased_by=request.user).order_by('-purchased_at')
+    cart = Cart.objects.get(user=request.user)
+
+    return render(request, 'artshop/profile.html', {
+        'profile': profile,
+        'wishlists': wishlists,
+        'purchases': purchases,
+        'cart': cart,
+    })
+
+@login_required
+def create_wishlist(request):
+    if request.method == "POST":
+        form = WishlistForm(request.POST)
+        if form.is_valid():
+            wishlist = form.save(commit=False)
+            wishlist.user = request.user
+            wishlist.save()
+            return redirect('profile')
+    else:
+        form = WishlistForm()
+    return render(request, 'artshop/wishlist_form.html', {'form': form})
