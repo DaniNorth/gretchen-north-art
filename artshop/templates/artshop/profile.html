@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-container-background rounded-xl shadow-md">
+
+  <h1 class="text-3xl font-bold text-heading-text mb-4">
+    Welcome, {{ profile.full_name|default:user.username }}
+  </h1>
+
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-xl font-semibold text-subheading">Profile Info</h2>
+    <a href="{% url 'edit_profile' %}" class="text-link hover:text-link-hover text-sm">Edit Profile</a>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 text-paragraph-text">
+    <p><strong>Full Name:</strong> {{ profile.full_name }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Phone:</strong> {{ profile.phone }}</p>
+    <p><strong>Address:</strong> {{ profile.address }}</p>
+    <p><strong>City:</strong> {{ profile.city }}</p>
+    <p><strong>State:</strong> {{ profile.state }}</p>
+    <p><strong>ZIP:</strong> {{ profile.postal_code }}</p>
+    <p><strong>Country:</strong> {{ profile.country }}</p>
+  </div>
+
+  <hr class="my-8 border-color">
+
+  <div class="mb-8">
+    <h2 class="text-xl font-semibold text-subheading mb-2">Cart Preview</h2>
+    {% if cart.items.all %}
+      <ul class="list-disc ml-5">
+        {% for item in cart.items.all %}
+          <li>{{ item.artwork.title }} - ${{ item.artwork.price }}</li>
+        {% endfor %}
+      </ul>
+      <a href="{% url 'cart' %}" class="mt-2 inline-block text-link hover:text-link-hover text-sm">Go to Cart</a>
+    {% else %}
+      <p>Your cart is empty.</p>
+    {% endif %}
+  </div>
+
+  <div class="mb-8">
+    <h2 class="text-xl font-semibold text-subheading mb-2">Wishlists</h2>
+    {% for wishlist in wishlists %}
+      <div class="mb-4 p-4 border border-color rounded">
+        <h3 class="font-bold text-heading-text">{{ wishlist.title }}</h3>
+        <ul class="list-disc ml-5 text-paragraph-text">
+          {% for item in wishlist.items.all %}
+            <li>{{ item.artwork.title }}</li>
+          {% empty %}
+            <li>No items yet.</li>
+          {% endfor %}
+        </ul>
+        <div class="mt-2 space-x-2 text-sm">
+          <a href="#" class="text-link hover:text-link-hover">Edit</a>
+          <a href="#" class="text-link hover:text-link-hover">Delete</a>
+        </div>
+      </div>
+    {% empty %}
+      <p>You don’t have any wishlists yet.</p>
+    {% endfor %}
+  </div>
+
+  <div>
+    <h2 class="text-xl font-semibold text-subheading mb-2">Recent Purchases</h2>
+    {% for art in purchases %}
+      <div class="mb-2">
+        <p><strong>{{ art.title }}</strong> – purchased {{ art.purchased_at|date:"M d, Y" }}</p>
+        <p class="text-sm text-gray-500">Status: Shipping info coming soon</p>
+      </div>
+    {% empty %}
+      <p>You haven’t purchased anything yet.</p>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
