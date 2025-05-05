@@ -14,6 +14,11 @@ class Artwork(models.Model):
     collection = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)
+    length_in = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    width_in = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    height_in = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    weight_lb = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+
 
     is_active = models.BooleanField(default=True)
     is_sold = models.BooleanField(default=False)
