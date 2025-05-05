@@ -27,6 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # hardcoded old key for development. Production key refrenced in .env file. 
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-key-if-missing")
+SQUARE_ACCESS_TOKEN = os.getenv("SQUARE_ACCESS_TOKEN")
+SQUARE_LOCATION_ID = os.getenv("SQUARE_LOCATION_ID")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
