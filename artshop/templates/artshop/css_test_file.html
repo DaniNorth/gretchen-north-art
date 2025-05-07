@@ -1,0 +1,214 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-8 bg-white min-h-screen text-sm font-medium">
+    <style>
+      .color-box {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #ccc;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .color-sample {
+        height: 50px;
+        border-radius: 0.375rem;
+        border: 1px solid rgba(0,0,0,0.05);
+      }
+    </style>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-heading-text);"></div>
+      <span class="text-heading">--color-heading-text</span>
+      <code>#2D3A26</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-paragraph-text);"></div>
+      <span class="text-heading">--color-paragraph-text</span>
+      <code>#424C21</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-subheading);"></div>
+      <span class="text-heading">--color-subheading</span>
+      <code>#7F4B30</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-secondary-subheading);"></div>
+      <span class="text-heading">--color-secondary-subheading</span>
+      <code>#666D4B</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-link);"></div>
+      <span class="text-heading">--color-link</span>
+      <code>#B2682C</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-link-hover);"></div>
+      <span class="text-heading">--color-link-hover</span>
+      <code>#B28538</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-warning);"></div>
+      <span class="text-heading">--color-warning</span>
+      <code>#E6B44A</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-success);"></div>
+      <span class="text-heading">--color-success</span>
+      <code>#424C21</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-danger);"></div>
+      <span class="text-heading">--color-danger</span>
+      <code>#B00020</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-background);"></div>
+      <span class="text-heading">--color-background</span>
+      <code>#EBDDC1</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-page-background);"></div>
+      <span class="text-heading">--color-page-background</span>
+      <code>#BECCC0</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-container-background);"></div>
+      <span class="text-heading">--color-container-background</span>
+      <code>#c9c2b2</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-surface);"></div>
+      <span class="text-heading">--color-surface</span>
+      <code>#FAF8F3</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-border-color);"></div>
+      <span class="text-heading">--color-border-color</span>
+      <code>#D7CBB3</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-button);"></div>
+      <span class="text-heading">--color-button</span>
+      <code>#839195</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-button-hover);"></div>
+      <span class="text-heading">--color-button-hover</span>
+      <code>#666D4B</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-secondary-button);"></div>
+      <span class="text-heading">--color-secondary-button</span>
+      <code>#8B9D77</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-overlay);"></div>
+      <span class="text-heading">--color-overlay</span>
+      <code>#173125</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-primary);"></div>
+      <span class="text-heading">--color-primary</span>
+      <code>#B28538</code>
+    </div>
+  
+    <div class="color-box">
+      <div class="color-sample" style="background: var(--color-accent);"></div>
+      <span class="text-heading">--color-accent</span>
+      <code>#E6B44A</code>
+    </div>
+  </div>
+
+  <div class="typography-token-card">
+    <div class="typography-preview text-heading">Heading Text</div>
+    <div class="text-subheading">class="text-heading"</div>
+    <code>var(--color-heading-text)</code>
+  </div>
+
+  <div class="gradient-token-card">
+    <div class="gradient-sample-box"></div>
+    <div class="text-paragraph">.bg-forest-gradient</div>
+    <code>linear-gradient(135deg, #c9c2b2, #BECCC0, #8B9D77)</code>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-8 bg-white text-sm font-medium min-h-screen">
+    <!-- Heading Text -->
+    <div class="p-4 border rounded shadow-sm">
+      <p class="text-heading text-lg font-bold">Heading Text</p>
+      <div class="mt-2 text-xs">Class: <code>.text-heading</code></div>
+      <div class="text-gray-500 text-xs">Token: <code>--color-heading-text</code></div>
+    </div>
+  
+    <!-- Paragraph Text -->
+    <div class="p-4 border rounded shadow-sm">
+      <p class="text-paragraph text-base">This is paragraph body text.</p>
+      <div class="mt-2 text-xs">Class: <code>.text-paragraph</code></div>
+      <div class="text-gray-500 text-xs">Token: <code>--color-paragraph-text</code></div>
+    </div>
+  
+    <!-- Subheading -->
+    <div class="p-4 border rounded shadow-sm">
+      <p class="text-subheading text-lg font-semibold">Subheading Text</p>
+      <div class="mt-2 text-xs">Class: <code>.text-subheading</code></div>
+      <div class="text-gray-500 text-xs">Token: <code>--color-subheading</code></div>
+    </div>
+  
+    <!-- Secondary Subheading -->
+    <div class="p-4 border rounded shadow-sm">
+      <p class="text-subheading-secondary text-lg font-medium">Secondary Subheading</p>
+      <div class="mt-2 text-xs">Class: <code>.text-subheading-secondary</code></div>
+      <div class="text-gray-500 text-xs">Token: <code>--color-secondary-subheading</code></div>
+    </div>
+  
+    <!-- Link Text -->
+    <div class="p-4 border rounded shadow-sm">
+      <a href="#" class="text-link">This is a link</a>
+      <div class="mt-2 text-xs">Class: <code>.text-link</code></div>
+      <div class="text-gray-500 text-xs">Token: <code>--color-link</code></div>
+    </div>
+  
+    <!-- Link Hover Preview -->
+    <div class="p-4 border rounded shadow-sm">
+      <a href="#" class="text-link hover:text-link-hover">Hover over this link</a>
+      <div class="mt-2 text-xs">Class: <code>.text-link-hover</code> on hover</div>
+      <div class="text-gray-500 text-xs">Token: <code>--color-link-hover</code></div>
+    </div>
+  
+    <!-- Success Text -->
+    <div class="p-4 border rounded shadow-sm">
+      <p class="text-success">Success message</p>
+      <div class="mt-2 text-xs">Class: <code>.text-success</code></div>
+      <div class="text-gray-500 text-xs">Token: <code>--color-success</code></div>
+    </div>
+  
+    <!-- Warning Text -->
+    <div class="p-4 border rounded shadow-sm">
+      <p class="text-warning">Warning message</p>
+      <div class="mt-2 text-xs">Class: <code>.text-warning</code></div>
+      <div class="text-gray-500 text-xs">Token: <code>--color-warning</code></div>
+    </div>
+  
+    <!-- Danger Text -->
+    <div class="p-4 border rounded shadow-sm">
+      <p class="text-danger">Danger/Error message</p>
+      <div class="mt-2 text-xs">Class: <code>.text-danger</code></div>
+      <div class="text-gray-500 text-xs">Token: <code>--color-danger</code></div>
+    </div>
+  </div>

@@ -2,36 +2,40 @@
 {% block title %}Your Cart{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto mt-10">
-  <h1 class="text-3xl font-bold mb-6">Shopping Cart</h1>
+<div class="max-w-2xl mx-auto mt-10 p-6 rounded-xl shadow-card border border-[var(--color-border-color)] bg-static-page">
+  <h1 class="text-3xl font-bold text-[var(--color-heading-text)] mb-6">Shopping Cart</h1>
 
   {% if user.is_authenticated %}
     {% if items %}
       <ul class="space-y-4">
         {% for item in items %}
-          <li class="border p-4 rounded shadow-sm">
-            <div class="flex justify-between">
+          <li class="border border-[var(--color-border-color)] bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
+            <div class="flex justify-between items-start">
               <div>
-                <h2 class="text-lg font-semibold">{{ item.artwork.title }}</h2>
+                <h2 class="text-lg font-semibold text-[var(--color-heading-text)]">{{ item.artwork.title }}</h2>
                 <p class="text-sm text-gray-600">${{ item.artwork.price }} × {{ item.quantity }}</p>
               </div>
-              <p class="text-right text-lg font-bold">${{ item.artwork.price|floatformat:2|add:"0"|floatformat:2 }}</p>
+              <div class="text-right">
+                <p class="text-lg font-bold text-[var(--color-heading-text)]">
+                  ${{ item.artwork.price|floatformat:2|add:"0"|floatformat:2 }}
+                </p>
+              </div>
             </div>
           </li>
         {% endfor %}
       </ul>
 
       <div class="mt-6 text-right">
-        <p class="text-xl font-bold">Total: ${{ total|floatformat:2 }}</p>
-        <a href="{% url 'checkout' %}" class="mt-4 inline-block bg-button hover:bg-button-hover text-white font-semibold py-2 px-6 rounded">
+        <p class="text-xl font-bold text-[var(--color-heading-text)] mb-4">Sub-total:  ${{ total|floatformat:2 }}</p>
+        <a href="{% url 'checkout' %}" class="btn bg-[var(--color-button)] hover:bg-[var(--color-button-hover)] text-white">
           Proceed to Checkout
         </a>
       </div>
     {% else %}
-      <p>Your cart is empty.</p>
+      <p class="text-[var(--color-paragraph-text)] text-lg">Your cart is empty.</p>
     {% endif %}
   {% else %}
-    <p class="text-lg">
+    <p class="text-lg text-[var(--color-heading-text)]">
       Please <a href="{% url 'account_login' %}" class="text-link hover:text-link-hover font-semibold">log in</a> to view your cart.
     </p>
   {% endif %}

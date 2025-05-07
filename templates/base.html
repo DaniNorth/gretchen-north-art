@@ -5,53 +5,23 @@
   <meta charset="UTF-8" />
   <title>{% block title %}Gretchen North Art{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+  <link rel="stylesheet" href="{% static 'css/output.css' %}" />
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
+  <meta name="description" content="Original art by Gretchen North — curated collections, shop, and stories behind the brush." />
 </head>
+<body class="relative min-h-screen flex flex-col font-sans tracking-tight text-paragraph-text overflow-x-hidden">
 
-<body class="bg-page-background text-paragraph-text min-h-screen flex flex-col">
+  {% block background %}
+    <div class="fixed inset-0 -z-10 pointer-events-none bg-animated-gradient"></div>
+  {% endblock %}
+
   {% include "partials/navbar.html" %}
-    <main class="p-6 max-w-6xl mx-auto w-full grow">
-      {% block content %}{% endblock %}
-    </main>
 
-    <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-      <div id="modal-backdrop" class="fixed inset-0"></div>
-    <div class="bg-container-background p-6 rounded-xl max-w-md w-[90%] relative z-10 animate-fade-in shadow-lg">
-      <button onclick="closeModal()" class="absolute top-2 right-3 text-2xl text-heading-text hover:text-danger font-bold">
-        &times;
-      </button>
-      <div id="modal-content"></div>
-    </div>
-    </div>
-    <div id="toast" class="fixed bottom-5 right-5 bg-success text-white py-2 px-4 rounded shadow-lg hidden z-50 transition-opacity duration-300">
-    </div>
+  <main class="grow w-full max-w-6xl mx-auto p-6">
+    {% block content %}{% endblock %}
+  </main>
 
-    <script>
-      function openModal(content) {
-        document.getElementById('modal-content').innerHTML = content;
-        document.getElementById('modal-overlay').classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
-      }
+  {# {% include "partials/footer.html" %} #}
 
-      function closeModal() {
-        document.getElementById('modal-overlay').classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-      }
-
-      function showToast(message = 'Saved!', duration = 3000) {
-        const toast = document.getElementById('toast');
-        toast.innerText = message;
-        toast.classList.remove('hidden', 'opacity-0');
-        toast.classList.add('opacity-100');
-
-        setTimeout(() => {
-          toast.classList.remove('opacity-100');
-          toast.classList.add('opacity-0');
-          setTimeout(() => {
-            toast.classList.add('hidden');
-          }, 500);
-        }, duration);
-      }
-    </script>
-  </body>
+</body>
 </html>

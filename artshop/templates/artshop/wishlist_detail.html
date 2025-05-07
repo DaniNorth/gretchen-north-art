@@ -1,36 +1,58 @@
 {% extends "base.html" %}
 {% block title %}{{ wishlist.title }}{% endblock %}
+
 {% block content %}
-<div class="max-w-3xl mx-auto mt-10 p-6 bg-container-background rounded-xl shadow-md">
+<div class="max-w-4xl mx-auto mt-10 p-6 rounded-xl shadow-card border border-[var(--color-border-color)] bg-static-cream">
   <div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold text-heading-text">{{ wishlist.title }}</h1>
-    <div class="flex space-x-4">
-      <a href="{% url 'edit_wishlist' wishlist.pk %}" class="text-link hover:text-link-hover text-sm">Edit</a>
+    <h1 class="text-2xl font-bold text-heading">{{ wishlist.title }}</h1>
+    <div class="flex gap-3">
+      <a href="{% url 'edit_wishlist' wishlist.pk %}" class="btn-secondary text-sm py-1 px-3">Edit</a>
       <form action="{% url 'delete_wishlist' wishlist.pk %}" method="post" onsubmit="return confirm('Are you sure you want to delete this wishlist?');">
         {% csrf_token %}
-        <button type="submit" class="text-red-600 hover:text-red-800 text-sm">Delete</button>
+        <button type="submit" class="btn-outline text-sm py-1 px-3 text-danger">Delete</button>
       </form>
     </div>
   </div>
+
   {% if items %}
-    <ul class="divide-y divide-gray-300">
+    <ul class="space-y-4">
       {% for item in items %}
-        <li class="py-4 flex justify-between items-center">
-          <div>
-            <p class="text-heading-text font-medium">{{ item.artwork.title }}</p>
-            <p class="text-paragraph-text text-sm">${{ item.artwork.price }}</p>
+        <li class="bg-[#f5f6f7] hover:bg-[#e6e8ea] p-4 rounded-lg shadow-sm border border-[var(--color-border-color)] transition">
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-4 min-w-[220px]">
+              <div class="relative group w-16 h-16 shrink-0">
+                <img src="{{ item.artwork.image.url }}" alt="{{ item.artwork.title }}"
+                     class="w-full h-full object-cover rounded shadow transition-transform duration-300 group-hover:scale-150 z-10">
+              </div>
+              <div>
+                <p class="text-heading font-medium">{{ item.artwork.title }}</p>
+                <p class="text-paragraph text-sm">${{ item.artwork.price }}</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 justify-end">
+              <a href="{% url 'artwork_detail' item.artwork.pk %}" class="btn text-sm py-1 px-3">View</a>
+
+              <form method="post" action="{% url 'add_to_cart' item.artwork.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-secondary text-sm py-1 px-3">Add to Cart</button>
+              </form>
+
+              <form method="post" action="{% url 'remove_from_wishlist' wishlist.pk item.artwork.pk %}" onsubmit="return confirm('Remove this artwork?');">
+                {% csrf_token %}
+                <button type="submit" class="btn-outline text-sm py-1 px-3 text-danger">Remove</button>
+              </form>
+            </div>
           </div>
-          <a href="{% url 'artwork_detail' item.artwork.pk %}" class="text-link hover:text-link-hover text-sm">
-            View
-          </a>
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p class="text-paragraph-text text-sm">This wishlist is empty.</p>
+    <p class="text-paragraph text-sm">This wishlist is empty.</p>
   {% endif %}
+
   <div class="mt-6">
-    <a href="{% url 'profile' %}" class="text-link hover:text-link-hover text-sm">← Back to profile</a>
+    <a href="{% url 'profile' %}" class="btn-link text-sm">← Back to profile</a>
   </div>
 </div>
 {% endblock %}

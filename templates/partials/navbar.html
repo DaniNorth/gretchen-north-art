@@ -1,58 +1,58 @@
-<nav class="bg-container-background border-b border-color px-6 py-4">
+<nav class="sticky top-0 z-50 bg-[linear-gradient(to_right,_#f7f8f9,_#dfe3e6,_#f7f8f9)] backdrop-blur-md border-b border-[var(--color-border-color)] px-6 py-4 shadow-md">
   <div class="flex justify-between items-center">
-    <a href="/" class="text-heading-text text-xl font-bold">Gretchen North Art</a>
-
-    <!-- mobile layout hamburger menu icon -->
-    <div class="flex items-center sm:hidden">
-      <button onclick="toggleNav()" class="text-heading-text text-2xl focus:outline-none">
+    <a href="/" class="text-[var(--color-heading-text)] text-xl font-bold tracking-tight hover-lift transition-all">
+      Gretchen North Art
+    </a>
+    <div class="sm:hidden">
+      <button onclick="toggleNav()" class="text-[var(--color-heading-text)] text-2xl focus-glow" aria-label="Toggle Navigation">
         ☰
       </button>
     </div>
-
-    <!-- Desktop Layout -->
     <div class="hidden sm:flex items-center space-x-6">
-      <a href="/" class="text-link hover:text-link-hover">Home</a>
-      <a href="{% url 'about' %}" class="text-link hover:text-link-hover">About</a>
-      <a href="{% url 'cart' %}" class="text-link hover:text-link-hover">Cart</a>
-      <a href="/admin/" class="text-link hover:text-link-hover">Admin</a>
-
+      <a href="/" class="text-link hover:text-link-hover transition-colors">Home</a>
+      <a href="{% url 'about' %}" class="text-link hover:text-link-hover transition-colors">About</a>
+      <a href="{% url 'cart' %}" class="text-link hover:text-link-hover transition-colors">Cart</a>
+      <a href="/admin/" class="text-link hover:text-link-hover transition-colors">Admin</a>
       {% if user.is_authenticated %}
-        <a href="{% url 'profile' %}" class="text-link hover:text-link-hover">My Profile</a>
-        <a href="{% url 'account_logout' %}" class="text-link hover:text-link-hover">Logout</a>
+        <a href="{% url 'profile' %}" class="text-link hover:text-link-hover transition-colors">My Profile</a>
+        <a href="{% url 'account_logout' %}" class="text-link hover:text-link-hover transition-colors">Logout</a>
       {% else %}
-        <a href="{% url 'account_login' %}" class="text-link hover:text-link-hover">Login</a>
+        <a href="{% url 'account_login' %}" class="text-link hover:text-link-hover transition-colors">Login</a>
       {% endif %}
     </div>
   </div>
 
   {% if cart_hold_expires_at %}
-    <div class="text-sm text-danger mt-2 sm:mt-3">
-      ⏳ Hold expires in <span id="nav-timer">loading...</span>
-    </div>
+  <div class="text-sm text-[var(--color-danger)] mt-3 font-medium">
+  <span class="hourglass-flip inline-block" aria-hidden="true">⏳</span> Hold expires in <span id="nav-timer">loading...</span>
+  </div>
   {% endif %}
 
-  <!-- Mobile Layout for a vertical and collapsable Navbar -->
-  <div id="nav-links" class="hidden sm:hidden mt-4 flex flex-col space-y-3 text-right">
-    <a href="/" class="text-link hover:text-link-hover">Home</a>
-    <a href="{% url 'about' %}" class="text-link hover:text-link-hover">About</a>
-    <a href="{% url 'cart' %}" class="text-link hover:text-link-hover">Cart</a>
-    <a href="/admin/" class="text-link hover:text-link-hover">Admin</a>
-
+  <div id="nav-links" class="hidden flex-col space-y-3 mt-4 text-right sm:hidden">
+    <a href="/" class="text-link hover:text-link-hover transition-colors">Home</a>
+    <a href="{% url 'about' %}" class="text-link hover:text-link-hover transition-colors">About</a>
+    <a href="{% url 'cart' %}" class="text-link hover:text-link-hover transition-colors">Cart</a>
+    <a href="/admin/" class="text-link hover:text-link-hover transition-colors">Admin</a>
     {% if user.is_authenticated %}
-      <a href="{% url 'profile' %}" class="text-link hover:text-link-hover">My Profile</a>
-      <a href="{% url 'account_logout' %}" class="text-link hover:text-link-hover">Logout</a>
+      <a href="{% url 'profile' %}" class="text-link hover:text-link-hover transition-colors">My Profile</a>
+      <a href="{% url 'account_logout' %}" class="text-link hover:text-link-hover transition-colors">Logout</a>
     {% else %}
-      <a href="{% url 'account_login' %}" class="text-link hover:text-link-hover">Login</a>
+      <a href="{% url 'account_login' %}" class="text-link hover:text-link-hover transition-colors">Login</a>
     {% endif %}
   </div>
 
   <script>
     function toggleNav() {
-      const nav = document.getElementById('nav-links');
-      nav.classList.toggle('hidden');
+      const nav = document.getElementById("nav-links");
+      if (nav) {
+        nav.classList.toggle("hidden");
+        nav.classList.toggle("flex");
+      }
     }
+  </script>
 
-    {% if cart_hold_expires_at %}
+  {% if cart_hold_expires_at %}
+  <script>
     document.addEventListener("DOMContentLoaded", function () {
       const navExpiresAt = new Date("{{ cart_hold_expires_at|date:'c' }}");
       const navTimerEl = document.getElementById("nav-timer");
@@ -72,8 +72,7 @@
       updateNavTimer();
       setInterval(updateNavTimer, 1000);
     });
-    {% endif %}
   </script>
+  {% endif %}
 </nav>
-
 <!-- Coutdown timer implemented globally with help of ChatGPT -->

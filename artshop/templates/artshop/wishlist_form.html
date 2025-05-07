@@ -1,12 +1,26 @@
 {% extends "base.html" %}
 {% block title %}Create Wishlist{% endblock %}
+
 {% block content %}
-<div class="max-w-md mx-auto mt-10 p-6 bg-container-background rounded-xl shadow-md">
-  <h1 class="text-2xl font-bold mb-4 text-heading-text">New Wishlist</h1>
-  <form method="post">
+<div class="max-w-md mx-auto mt-10 p-6 rounded-xl shadow-card border border-[var(--color-border-color)] bg-static-cream">
+  <h1 class="text-2xl font-bold mb-6 text-heading">📝 New Wishlist</h1>
+
+  <form method="post" class="space-y-6">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn">Save Wishlist</button>
+
+    <div>
+      <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-heading-text mb-1">
+        {{ form.title.label }}
+      </label>
+      {{ form.title }}
+      {% if form.title.errors %}
+        <p class="text-sm text-danger mt-1">{{ form.title.errors.0 }}</p>
+      {% endif %}
+    </div>
+
+    <div class="flex justify-end">
+      <button type="submit" class="btn">➕ Save Wishlist</button>
+    </div>
   </form>
 </div>
 {% endblock %}

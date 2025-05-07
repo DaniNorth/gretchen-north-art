@@ -1,61 +1,102 @@
+{% extends "base.html" %}
+{% block title %}{{ art.title }}{% endblock %}
+
+{% block content %}
 {% if art.pk %}
-  <h1 class="text-3xl font-bold mb-4">{{ art.title }}</h1>
-  <img src="{{ art.image.url }}" alt="{{ art.title }}" class="w-full max-w-xl mb-4 rounded-xl shadow-md">
-  <p class="text-lg font-semibold">Price: ${{ art.price }}</p>
-  <p class="text-sm text-subheading mb-2">{{ art.category }} | {{ art.collection }}</p>
-  <p class="text-paragraph-text mb-4">{{ art.description }}</p>
+  <div class="max-w-3xl mx-auto mt-12 p-6 bg-white rounded-xl shadow-card border border-[var(--color-border-color)]">
+    <h1 class="text-2xl font-bold text-heading mb-4 text-center">{{ art.title }}</h1>
 
-  <ul class="text-sm mb-4 space-y-1">
-    {% if art.medium %}<li><strong>Medium:</strong> {{ art.medium }}</li>{% endif %}
-    {% if art.length_in and art.width_in %}
-      <li><strong>Size:</strong> {{ art.length_in }}" × {{ art.width_in }}"{% if art.height_in %} × {{ art.height_in }}"{% endif %}</li>
-    {% endif %}
-    {% if art.weight_lb %}<li><strong>Weight:</strong> {{ art.weight_lb }} lb</li>{% endif %}
-  </ul>
-
-  {% if remaining_hold %}
-    <p class="text-yellow-600 mt-2 font-semibold">
-      You have this on hold for <span id="timer">{{ remaining_hold|timesince }} more</span>.
-    </p>
-    <!-- Scrpit was mostly produced by ChatGPT when my script failed to count backward -->
-    <script>
-      const holdExpiresAt = new Date("{{ remaining_hold|date:'c' }}");
-      const timerElement = document.getElementById("timer");
-
-      function updateTimer() {
-        const now = new Date();
-        const diff = holdExpiresAt - now;
-        if (diff <= 0) {
-          timerElement.innerText = "expired";
-          return;
-        }
-        const minutes = Math.floor(diff / 1000 / 60);
-        const seconds = Math.floor((diff / 1000) % 60).toString().padStart(2, "0");
-        timerElement.innerText = `${minutes}m ${seconds}s remaining`;
-      }
-      updateTimer();
-      setInterval(updateTimer, 1000);
-    </script>
-  {% endif %}
-
-  {% if user.is_authenticated %}
-    <div class="flex gap-4 mt-4">
-      <form method="post" action="{% url 'add_to_cart' art.pk %}">
-        {% csrf_token %}
-        <button type="submit" class="btn">Add to Cart 🛒</button>
-      </form>
-      <form method="post" action="{% url 'add_to_wishlist' art.pk %}">
-        {% csrf_token %}
-        <button type="submit" class="btn-secondary">Add to Wishlist 🎁</button>
-      </form>
-      <a href="{% url 'cart' %}" class="btn-outline">View Cart 🛒</a>
+    <div class="flex justify-center">
+      <img src="{{ art.image.url }}" alt="{{ art.title }}"
+           id="art-image"
+           class="max-w-md max-h-[60vh] w-auto h-auto rounded-lg shadow-md cursor-zoom-in transition-transform hover:scale-105" />
     </div>
-  {% else %}
-    <a href="{% url 'account_login' %}" class="btn mt-4">Log in to purchase or save</a>
-  {% endif %}
-  <a href="{% url 'home' %}" class="btn-link mt-6 inline-block">← Back to Artworks 🎨</a>
+
+    <p class="text-center text-lg font-semibold text-paragraph-text mt-4">Price: ${{ art.price }}</p>
+    <p class="text-center text-sm text-subheading mb-2">{{ art.category }} | {{ art.collection }}</p>
+    <p class="text-paragraph-text text-center mb-4 px-4">{{ art.description }}</p>
+
+    <ul class="text-sm text-paragraph-text mb-4 px-4 space-y-1">
+      {% if art.medium %}<li><strong>Medium:</strong> {{ art.medium }}</li>{% endif %}
+      {% if art.length_in and art.width_in %}
+        <li><strong>Size:</strong> {{ art.length_in }}" × {{ art.width_in }}"{% if art.height_in %} × {{ art.height_in }}"{% endif %}</li>
+      {% endif %}
+      {% if art.weight_lb %}<li><strong>Weight:</strong> {{ art.weight_lb }} lb</li>{% endif %}
+    </ul>
+
+    {% if remaining_hold %}
+      <p class="text-yellow-600 mt-2 font-semibold text-center">
+        You have this on hold for <span id="timer">{{ remaining_hold|timesince }} more</span>.
+      </p>
+      <script>
+        const holdExpiresAt = new Date("{{ remaining_hold|date:'c' }}");
+        const timerElement = document.getElementById("timer");
+        function updateTimer() {
+          const now = new Date();
+          const diff = holdExpiresAt - now;
+          if (diff <= 0) {
+            timerElement.innerText = "expired";
+            return;
+          }
+          const minutes = Math.floor(diff / 1000 / 60);
+          const seconds = Math.floor((diff / 1000) % 60).toString().padStart(2, "0");
+          timerElement.innerText = `${minutes}m ${seconds}s remaining`;
+        }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+      </script>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+      <div class="flex justify-center gap-3 mt-4 flex-wrap">
+        <form method="post" action="{% url 'add_to_cart' art.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn">Add to Cart 🛒</button>
+        </form>
+        <form method="post" action="{% url 'add_to_wishlist' art.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-secondary">Add to Wishlist 🎁</button>
+        </form>
+        <a href="{% url 'cart' %}" class="btn-outline">View Cart 🛒</a>
+      </div>
+    {% else %}
+      <div class="text-center mt-4">
+        <a href="{% url 'account_login' %}" class="btn">Log in to purchase or save</a>
+      </div>
+    {% endif %}
+
+    <div class="text-center mt-6">
+      <a href="{% url 'home' %}" class="btn-link">← Back to Artworks 🎨</a>
+    </div>
+  </div>
+
+  <div id="fullscreen-modal" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50 flex items-center justify-center">
+    <img src="{{ art.image.url }}" alt="{{ art.title }}"
+         class="max-w-full max-h-full rounded-lg shadow-xl" />
+    <button onclick="closeFullscreen()" class="absolute top-6 right-8 text-white text-3xl font-bold hover:text-red-400">&times;</button>
+  </div>
+
+  <script>
+    const artImage = document.getElementById('art-image');
+    const modal = document.getElementById('fullscreen-modal');
+
+    artImage.addEventListener('click', () => {
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    });
+
+    function closeFullscreen() {
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === "Escape") closeFullscreen();
+    });
+  </script>
 {% else %}
-  <p class="text-red-600 font-semibold">This artwork is not available.</p>
+  <p class="text-red-600 font-semibold mt-10 text-center">This artwork is not available.</p>
 {% endif %}
+{% endblock %}
 
 <!--look into updating with awesomfonts instead of emojis from https://emojipedia.org/artist-palette-->

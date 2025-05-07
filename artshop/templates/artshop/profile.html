@@ -1,29 +1,23 @@
 {% extends "base.html" %}
 {% block title %}My Profile{% endblock %}
 {% block content %}
-<div class="max-w-4xl mx-auto mt-10 p-6 bg-container-background rounded-xl shadow-md">
-  <h1 class="text-3xl font-bold text-heading-text mb-4">
+
+<div class="max-w-4xl mx-auto mt-10 p-6 rounded-xl shadow-card border border-[var(--color-border-color)] bg-static-cream">
+  <h1 class="text-3xl font-bold text-heading mb-6">
     Welcome, {{ profile.full_name|default:user.username }}
   </h1>
 
-  <div class="mb-6">
+  <section class="mb-8">
     <div class="flex justify-between items-center mb-2">
-      <h2 class="text-xl font-semibold text-subheading">Profile Info</h2>
-      <a href="{% url 'edit_profile' %}" class="text-link hover:text-link-hover text-sm">Edit Profile</a>
+      <h2 class="section-title text-xl">Profile Info</h2>
+      <a href="{% url 'edit_profile' %}" class="text-sm text-link hover:text-link-hover underline">Edit</a>
     </div>
-    <button
-      type="button"
-      id="toggle-profile-btn"
-      onclick="toggleProfile()"
-      class="text-sm text-link hover:text-link-hover mb-2"
-    >
+    <button type="button" id="toggle-profile-btn" aria-expanded="false"
+      onclick="toggleProfile()" class="text-sm text-link hover:text-link-hover">
       Show Account Info
     </button>
-    <div
-      id="profile-info"
-      class="overflow-hidden max-h-0 transition-all duration-500 ease-in-out"
-    >
-      <div class="grid grid-cols-2 gap-4 text-paragraph-text pt-4">
+    <div id="profile-info" class="overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-paragraph">
         <p><strong>Full Name:</strong> {{ profile.full_name }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Phone:</strong> {{ profile.phone }}</p>
@@ -34,96 +28,190 @@
         <p><strong>Country:</strong> {{ profile.country }}</p>
       </div>
     </div>
-  </div>
+  </section>
+
   <hr class="my-8 border-color">
 
-  <div class="mb-8">
-    <h2 class="text-xl font-semibold text-subheading mb-2">Cart Preview</h2>
-    {% if cart.items.all %}
-      <ul class="list-disc ml-5">
-        {% for item in cart.items.all %}
-          <li>{{ item.artwork.title }} - ${{ item.artwork.price }}</li>
-        {% endfor %}
-      </ul>
-      <div class="mt-4 flex space-x-3">
-        <a href="{% url 'cart' %}" class="bg-button hover:bg-button-hover text-white font-semibold py-2 px-4 rounded text-sm">
-          Go to Cart
-        </a>
-        <a href="{% url 'home' %}" class="bg-secondary-button hover:bg-button-hover text-white font-semibold py-2 px-4 rounded text-sm">
-          Browse More Art
-        </a>
-      </div>
-    {% else %}
-      <p>Your cart is empty.</p>
-      <a href="{% url 'home' %}" class="mt-2 inline-block bg-button hover:bg-button-hover text-white font-semibold py-2 px-4 rounded text-sm">
-        Browse Art
-      </a>
-    {% endif %}
-  </div>
+  <section class="mb-8">
+    <h2 class="section-title text-xl mb-3">Cart Preview</h2>
+    <div id="drop-target" class="border-2 border-dashed border-[var(--color-border-color)] p-6 rounded-md text-center text-paragraph bg-white transition">
+      Drag & drop artwork here to add to cart
+    </div>
+    <ul id="cart-preview" class="text-paragraph mt-4 mb-4 space-y-2">
+      {% for item in cart.items.all %}
+      <li class="flex items-center justify-between p-2 bg-white border border-gray-200 rounded hover:shadow-sm">
+        <div class="flex items-center gap-2">
+          <img src="{{ item.artwork.image.url }}" alt="{{ item.artwork.title }}"
+               class="w-8 h-8 rounded object-cover hover:scale-[5.5] hover:z-10 transition-transform" />
+          <span class="text-sm">{{ item.artwork.title }} — ${{ item.artwork.price }}</span>
+        </div>
+        <button onclick="removeFromCart('{{ item.id|escapejs }}')" class="text-danger text-lg font-bold">&times;</button>
+      </li>
+      {% empty %}
+      <p class="text-paragraph mt-4">Your cart is empty.</p>
+      {% endfor %}
+    </ul>
+    <div class="flex flex-wrap gap-4">
+      <a href="{% url 'cart' %}" class="btn">Go to Cart</a>
+      <a href="{% url 'home' %}" class="btn-secondary">Browse More Art</a>
+    </div>
+  </section>
 
+  <hr class="my-8 border-color">
 
-  <div class="mb-8">
-    <div class="flex justify-between items-center">
-      <h2 class="text-xl font-semibold text-subheading mb-2">Wishlists</h2>
-      <a href="#" onclick="openWishlistModal()" class="text-sm bg-button hover:bg-button-hover text-white font-semibold py-1 px-3 rounded">
+  <section>
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="section-title text-xl">Wishlists</h2>
+      <a href="#" onclick="openWishlistModal()" class="btn-secondary text-sm py-1 px-3">
         + New Wishlist
       </a>
     </div>
+
     {% for wishlist in wishlists %}
-      <div class="mb-4 p-4 border border-color rounded">
-        <h3 class="font-bold text-heading-text">{{ wishlist.title }}</h3>
-        <ul class="list-disc ml-5 text-paragraph-text">
-          {% for item in wishlist.items.all %}
-            <li class="flex justify-between items-center">
-              <span>{{ item.artwork.title }}</span>
-              <form method="post" action="{% url 'remove_from_wishlist' wishlist.pk item.artwork.pk %}" onsubmit="return confirm('Remove this artwork?');">
+    <div class="card mb-6 p-4 bg-surface border border-[var(--color-border-color)] rounded-lg">
+      <h3 class="font-bold text-heading mb-3">{{ wishlist.title }}</h3>
+      <ul class="space-y-2 text-paragraph mb-2">
+        {% for item in wishlist.items.all %}
+          <li class="bg-[#f5f6f7] p-2 px-3 rounded-lg border border-[var(--color-border-color)] hover:cursor-grab transition-shadow"
+              draggable="true"
+              data-artwork-id="{{ item.artwork.pk }}"
+              ondragstart="handleDragStart(event)"
+              ondragend="handleDragEnd(event)">
+            <div class="flex justify-between items-center gap-3 text-sm">
+              <div class="flex items-center gap-3">
+                <img src="{{ item.artwork.image.url }}"
+                   alt="{{ item.artwork.title }}"
+                   class="w-10 h-10 object-cover rounded hover:scale-[5.5] transition-transform duration-200 ease-in-out z-10 hover:z-20 hover:shadow-xl" />
+                <span class="font-medium text-heading-text">{{ item.artwork.title }}</span>
+              </div>
+              <form method="post" action="{% url 'remove_from_wishlist' wishlist.pk item.artwork.pk %}"
+                    onsubmit="return confirm('Remove this artwork?');">
                 {% csrf_token %}
-                <button type="submit" class="text-red-600 hover:underline text-xs">Remove</button>
+                <button type="submit" class="btn-outline text-xs py-0.5 px-2 text-danger">✕</button>
               </form>
-            </li>
-          {% empty %}
-            <li>No items yet.</li>
-          {% endfor %}
-        </ul>
-        <div class="mt-2 space-x-2 text-sm">
-          <a href="{% url 'wishlist_detail' wishlist.pk %}" class="text-link hover:text-link-hover">View</a>
-          <a href="{% url 'edit_wishlist' wishlist.pk %}" class="text-link hover:text-link-hover">Edit</a>
-        </div>
-        <form action="{% url 'delete_wishlist' wishlist.pk %}" method="post" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this wishlist?');">
+            </div>
+          </li>
+        {% empty %}
+          <li class="text-paragraph italic">No items yet.</li>
+        {% endfor %}
+      </ul>
+      <div class="flex gap-4 text-sm mt-3">
+        <a href="{% url 'wishlist_detail' wishlist.pk %}" class="btn-secondary text-xs py-1 px-3">View</a>
+        <a href="{% url 'edit_wishlist' wishlist.pk %}" class="btn-secondary text-xs py-1 px-3">Edit</a>
+        <form action="{% url 'delete_wishlist' wishlist.pk %}" method="post" onsubmit="return confirm('Are you sure you want to delete this wishlist?');">
           {% csrf_token %}
-          <button type="submit" class="text-red-600 hover:underline text-sm">Delete</button>
+          <button type="submit" class="btn-outline text-xs py-1 px-3 text-danger">Delete</button>
         </form>
       </div>
-    {% empty %}
-      <p>You don’t have any wishlists yet.</p>
-    {% endfor %}
-  </div>
+    </div>
+  {% empty %}
+    <p class="text-paragraph">You don’t have any wishlists yet.</p>
+  {% endfor %}
+  </section>
 </div>
+{% endblock %}
 
 <script>
-function toggleProfile() {
-  const info = document.getElementById('profile-info');
-  const button = document.getElementById('toggle-profile-btn');
-
-  const isCollapsed = info.classList.contains('max-h-0');
-
-  if (isCollapsed) {
-    info.classList.remove('max-h-0');
-    info.classList.add('max-h-[1000px]');
-    button.textContent = 'Hide Account Info';
-  } else {
-    info.classList.remove('max-h-[1000px]');
-    info.classList.add('max-h-0');
-    button.textContent = 'Show Account Info';
+  function toggleProfile() {
+    const info = document.getElementById('profile-info');
+    const button = document.getElementById('toggle-profile-btn');
+    const isCollapsed = info.classList.contains('max-h-0');
+    if (isCollapsed) {
+      info.classList.remove('max-h-0');
+      info.classList.add('max-h-[1000px]');
+      button.textContent = 'Hide Account Info';
+    } else {
+      info.classList.remove('max-h-[1000px]');
+      info.classList.add('max-h-0');
+      button.textContent = 'Show Account Info';
+    }
+    button.setAttribute('aria-expanded', !isCollapsed);
   }
-}
-</script>
 
-<script>
   function openWishlistModal() {
     fetch("{% url 'create_wishlist' %}")
       .then(response => response.text())
       .then(html => openModal(html));
   }
+
+  function showToast(message = 'Saved!', duration = 3000) {
+    const toast = document.getElementById('toast');
+    toast.innerText = message;
+    toast.classList.remove('hidden', 'opacity-0');
+    toast.classList.add('opacity-100');
+    setTimeout(() => {
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 500);
+    }, duration);
+  }
+
+  function handleDragStart(e) {
+    e.dataTransfer.setData("text/plain", e.target.dataset.artworkId);
+    e.target.classList.add("bg-[#d6d8db]");
+  }
+
+  function handleDragEnd(e) {
+    e.target.classList.remove("bg-[#d6d8db]");
+  }
+
+  const dropTarget = document.getElementById("drop-target");
+
+  dropTarget.addEventListener("dragover", function(e) {
+    e.preventDefault();
+    dropTarget.classList.add("ring", "ring-2", "ring-green-400");
+  });
+
+  dropTarget.addEventListener("dragleave", function(e) {
+    dropTarget.classList.remove("ring", "ring-2", "ring-green-400");
+  });
+
+  dropTarget.addEventListener("drop", function(e) {
+    e.preventDefault();
+    dropTarget.classList.remove("ring", "ring-2", "ring-green-400");
+    const artworkId = e.dataTransfer.getData("text/plain");
+
+    fetch(`/cart/add/${artworkId}/`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.item_html) {
+        const cartList = document.querySelector("#cart-items");
+        if (cartList) cartList.insertAdjacentHTML("beforeend", data.item_html);
+        showToast("Added to cart!");
+      } else {
+        showToast("Error adding to cart");
+      }
+    });
+  });
+
+  document.addEventListener("click", function(e) {
+    if (e.target.matches(".remove-from-cart")) {
+      e.preventDefault();
+      const itemId = e.target.dataset.itemId;
+      const itemElem = e.target.closest("li");
+
+      fetch(`/cart/remove/${itemId}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": "{{ csrf_token }}" }
+      }).then(res => {
+        if (res.ok) {
+          itemElem.remove();
+          showToast("Removed from cart");
+        }
+      });
+    }
+  });
+
+  document.querySelectorAll(".hover-zoom").forEach(img => {
+    img.addEventListener("mouseenter", () => img.classList.add("scale-150", "z-20"));
+    img.addEventListener("mouseleave", () => img.classList.remove("scale-150", "z-20"));
+  });
 </script>
-{% endblock %}

@@ -4,25 +4,30 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto mt-10 p-6 bg-container-background rounded-xl shadow-md">
-  <h1 class="text-2xl font-bold mb-4 text-heading-text">Create an account</h1>
+<div class="max-w-md mx-auto mt-10 p-6 rounded-xl shadow-card border border-[var(--color-border-color)] bg-white">
+  <h1 class="text-2xl font-bold text-heading mb-6">Create an account</h1>
 
   {% if form.errors %}
-    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+    <div class="mb-4 p-3 bg-red-100 text-danger rounded">
       Please correct the error{{ form.errors|length > 1|yesno:"s," }} below.
     </div>
   {% endif %}
 
   <form method="post" class="space-y-4">
     {% csrf_token %}
-    {{ form.as_p }}
-
-    <button type="submit" class="bg-button hover:bg-button-hover text-white font-semibold py-2 px-4 rounded">
-      Sign Up
-    </button>
+    {% for field in form %}
+      <div>
+        <label for="{{ field.id_for_label }}" class="block mb-1 text-subheading">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <p class="text-sm text-danger mt-1">{{ field.errors.0 }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn w-full">Sign Up</button>
   </form>
 
-  <p class="text-sm mt-4 text-paragraph-text">
+  <p class="text-sm mt-4 text-paragraph">
     Already have an account?
     <a href="{% url 'account_login' %}" class="text-link hover:text-link-hover">Log in here</a>.
   </p>
@@ -32,7 +37,7 @@
     <p class="text-sm text-subheading mb-2">Or sign up with:</p>
     <div class="space-y-2">
       {% for provider in socialaccount_providers %}
-        <a href="{% provider_login_url provider.id %}" class="block w-full text-center bg-gray-100 hover:bg-gray-200 text-heading-text font-medium py-2 px-4 rounded">
+        <a href="{% provider_login_url provider.id %}" class="block w-full text-center btn-secondary">
           {{ provider.name }}
         </a>
       {% endfor %}
