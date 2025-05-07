@@ -1,41 +1,61 @@
-<h1 class="text-2xl font-bold">{{ art.title }}</h1>
-<p class="text-lg">{{ art.price }}</p>
+{% if art.pk %}
+  <h1 class="text-3xl font-bold mb-4">{{ art.title }}</h1>
+  <img src="{{ art.image.url }}" alt="{{ art.title }}" class="w-full max-w-xl mb-4 rounded-xl shadow-md">
+  <p class="text-lg font-semibold">Price: ${{ art.price }}</p>
+  <p class="text-sm text-subheading mb-2">{{ art.category }} | {{ art.collection }}</p>
+  <p class="text-paragraph-text mb-4">{{ art.description }}</p>
 
-{% if remaining_hold %}
-  <p class="text-yellow-600 mt-2 font-semibold">
-    You have this on hold for <span id="timer">{{ remaining_hold|timesince }} more</span>.
-  </p>
+  <ul class="text-sm mb-4 space-y-1">
+    {% if art.medium %}<li><strong>Medium:</strong> {{ art.medium }}</li>{% endif %}
+    {% if art.length_in and art.width_in %}
+      <li><strong>Size:</strong> {{ art.length_in }}" × {{ art.width_in }}"{% if art.height_in %} × {{ art.height_in }}"{% endif %}</li>
+    {% endif %}
+    {% if art.weight_lb %}<li><strong>Weight:</strong> {{ art.weight_lb }} lb</li>{% endif %}
+  </ul>
 
-  <script>
-     const holdExpiresAt = new Date("{{ remaining_hold|date:'c' }}");
-    const timerElement = document.getElementById("timer");
+  {% if remaining_hold %}
+    <p class="text-yellow-600 mt-2 font-semibold">
+      You have this on hold for <span id="timer">{{ remaining_hold|timesince }} more</span>.
+    </p>
+    <!-- Scrpit was mostly produced by ChatGPT when my script failed to count backward -->
+    <script>
+      const holdExpiresAt = new Date("{{ remaining_hold|date:'c' }}");
+      const timerElement = document.getElementById("timer");
 
-    function updateTimer() {
-      const now = new Date();
-      const diff = holdExpiresAt - now;
-
-      if (diff <= 0) {
-        timerElement.innerText = "expired";
-        return;
+      function updateTimer() {
+        const now = new Date();
+        const diff = holdExpiresAt - now;
+        if (diff <= 0) {
+          timerElement.innerText = "expired";
+          return;
+        }
+        const minutes = Math.floor(diff / 1000 / 60);
+        const seconds = Math.floor((diff / 1000) % 60).toString().padStart(2, "0");
+        timerElement.innerText = `${minutes}m ${seconds}s remaining`;
       }
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    </script>
+  {% endif %}
 
-      const minutes = Math.floor(diff / 1000 / 60);
-      const seconds = Math.floor((diff / 1000) % 60).toString().padStart(2, "0");
-      timerElement.innerText = `${minutes}m ${seconds}s remaining`;
-    }
-
-    updateTimer();
-    setInterval(updateTimer, 1000);
-  </script>
-{% endif %}
-
-<p class="mt-4">{{ art.description }}</p>
-
-{% if user.is_authenticated %}
-  <form method="post" action="{% url 'add_to_cart' art.pk %}">
-    {% csrf_token %}
-    <button type="submit" class="btn">Add to Cart</button>
-  </form>
+  {% if user.is_authenticated %}
+    <div class="flex gap-4 mt-4">
+      <form method="post" action="{% url 'add_to_cart' art.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn">Add to Cart 🛒</button>
+      </form>
+      <form method="post" action="{% url 'add_to_wishlist' art.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-secondary">Add to Wishlist 🎁</button>
+      </form>
+      <a href="{% url 'cart' %}" class="btn-outline">View Cart 🛒</a>
+    </div>
+  {% else %}
+    <a href="{% url 'account_login' %}" class="btn mt-4">Log in to purchase or save</a>
+  {% endif %}
+  <a href="{% url 'home' %}" class="btn-link mt-6 inline-block">← Back to Artworks 🎨</a>
 {% else %}
-  <a href="{% url 'account_login' %}" class="btn">Log in to purchase</a>
+  <p class="text-red-600 font-semibold">This artwork is not available.</p>
 {% endif %}
+
+<!--look into updating with awesomfonts instead of emojis from https://emojipedia.org/artist-palette-->
