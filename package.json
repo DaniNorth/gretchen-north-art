@@ -4,19 +4,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tailwindcss -i theme/static/src/input.css -o theme/static/css/output.css --watch --config=./postcss.config.mjs"
+    "dev": "tailwindcss -i theme/static/src/input.css -o theme/static/css/output.css --watch --config=./tailwind.config.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.5",
     "autoprefixer": "^10.4.21",
     "css": "^3.0.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.5"
   },
-  "description": "",
-  "dependencies": {
-    "@tailwindcss/postcss": "^4.1.5"
-  }
+  "description": ""
 }
