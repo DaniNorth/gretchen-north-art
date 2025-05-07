@@ -179,7 +179,7 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_LOGIN_METHODS = {"email"}
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
