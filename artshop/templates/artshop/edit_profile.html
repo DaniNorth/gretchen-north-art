@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile | Gretchen North Art{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4 text-heading-text">Edit Your Profile</h1>
+
+<form method="post" class="space-y-4">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <div class="flex gap-4 mt-4">
+    <button type="submit" class="btn">💾 Save Changes</button>
+    <a href="{% url 'profile' %}" class="btn-outline">Cancel</a>
+  </div>
+</form>
+{% endblock %}
+
+<!--look into updating with awesomfonts instead of emojis from https://emojipedia.org/artist-palette-->
