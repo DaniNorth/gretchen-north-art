@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tailwindcss -i theme/static/src/input.css -o theme/static/css/output.css --watch --config=./tailwind.config.js"
+    "dev": "tailwindcss -i theme/static/src/input.css -o theme/static/css/output.css --watch --config=./postcss.config.mjs"
   },
   "keywords": [],
   "author": "",
