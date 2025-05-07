@@ -17,8 +17,10 @@ class CustomerProfileForm(forms.ModelForm):
             'address': forms.Textarea(attrs={'rows': 2}),
         }
 
-
 class WishlistForm(forms.ModelForm):
     class Meta:
         model = Wishlist
         fields = ['title']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'input-text', 'placeholder': 'e.g. Holiday Picks'}),
+        }
