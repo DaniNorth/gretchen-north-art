@@ -4,7 +4,7 @@
 **Repository:** [github.com/DaniNorth/gretchen-north-art](https://github.com/DaniNorth/gretchen-north-art)  
 **Trello Board:** [Gretchen Artshop Project](https://trello.com/b/SbiztkQb/gretchen-artshop-project)
 
-![Screenshot of Homepage](./A_screenshot_of_the_homepage_of_Gretchen_North_Art.png)
+![Screenshot of Homepage](./screenshot-homepage.png)
 
 ## About the Project
 
