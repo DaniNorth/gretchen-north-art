@@ -1,0 +1,24 @@
+@layer base {
+    :root {
+      --color-heading-text: #2D3A26;           /* forest */
+      --color-paragraph-text: #424C21;         /* fern */
+      --color-subheading: #7F4B30;             /* earth */
+      --color-secondary-subheading: #666D4B;   /* moss */
+      --color-link: #B2682C;                   /* leaf base */
+      --color-link-hover: #B28538;             /* leaf hover */
+      --color-warning: #E6B44A;                /* gold */
+      --color-success: #424C21;                /* fern */
+      --color-danger: #B00020;                 /* danger red */
+      --color-background: #EBDDC1;             /* stone */
+      --color-page-background: #BECCC0;        /* eucalyptus */
+      --color-container-background: #c9c2b2;   /* sand */
+      --color-surface: #FAF8F3;                /* surface */
+      --color-border-color: #D7CBB3;           /* soft beige */
+      --color-button: #839195;                 /* riverrock */
+      --color-button-hover: #666D4B;           /* moss */
+      --color-secondary-button: #8B9D77;       /* caterpillar */
+      --color-overlay: #173125;                /* deep forest */
+      --color-primary: #B28538;                /* leaf hover */
+      --color-accent: #E6B44A;                 /* gold */
+    }
+  }
