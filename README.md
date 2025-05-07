@@ -4,7 +4,7 @@
 **Repository:** [github.com/DaniNorth/gretchen-north-art](https://github.com/DaniNorth/gretchen-north-art)  
 **Trello Board:** [Gretchen Artshop Project](https://trello.com/b/SbiztkQb/gretchen-artshop-project)
 
-![Screenshot of Homepage](./screenshot-homepage.png)
+![Screenshot of Homepage](theme/static/img/screenshot-homepage.png)
 
 ## About the Project
 
@@ -68,7 +68,7 @@ Clone the repo:
 ```bash
 git clone https://github.com/DaniNorth/gretchen-north-art.git
 cd gretchen-north-art
-Create your .env file and add required variables:
+Create your .env file and add the required variables:
 
 env
 Copy
