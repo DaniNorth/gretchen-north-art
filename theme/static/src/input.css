@@ -2,79 +2,63 @@
 
 @layer base {
   :root {
-    --color-heading-text: #2D2814;  /* drab-dark- brown*/
-    --color-paragraph-text: #424C21;  /* reseda-green */
-    --color-subheading: #7F4B30;   /* russet */
-    --color-secondary-subheading: #424C21; /*dark-moss-green */
-    --color-link: #B2682C;  /* tigers-eye */
-    --color-link-hover: #B28538; /* dark-goldenrod */
-    --color-warning: #E6B44A;  /* hunyadi-yellow*/
-    --color-success: #424C21;  /* dark-moss-green */
-    --color-danger: #B00020;   /* dark red */
-    --color-background: #EBDDC1;  /* pearl */
-    --color-page-background: #beccc0;  /* Eucalyptus */
-    --color-container-background: #FAF8F3;  /* lighter pearl */
-    --color-surface: #FAF8F3;   /* lights color*/
-    --color-border-color: #f0e8c3;  /* subtle green */
-    --color-button: #7F4B30;  /* russet */
-    --color-button-hover: #B2682C; /* tigrs-eye */
-    --color-secondary-button: #666D4B; /* reseda -green */
-    --color-overlay: #173125;  /*dark-green overlay */
-    --color-primary: #B28538;  /* dark-goldenrod */
-    --color-accent: #E6B44A;  /*hunyadi-yellow */
+    --color-heading-text: #2D2814;              /* drab-dark-brown */
+    --color-paragraph-text: #424C21;            /* reseda-green */
+    --color-subheading: #7F4B30;                /* russet */
+    --color-secondary-subheading: #424C21;      /* dark-moss-green */
+    --color-link: #B2682C;                      /* tigers-eye */
+    --color-link-hover: #B28538;                /* dark-goldenrod */
+    --color-warning: #E6B44A;                   /* hunyadi-yellow */
+    --color-success: #424C21;                   /* dark-moss-green */
+    --color-danger: #B00020;                    /* dark red */
+    --color-background: #EBDDC1;                /* pearl */
+    --color-page-background: #BECCC0;           /* eucalyptus */
+    --color-container-background: #FAF8F3;      /* lighter pearl */
+    --color-surface: #FAF8F3;                   /* light surface */
+    --color-border-color: #F0E8C3;              /* subtle green */
+    --color-button: #7F4B30;                    /* russet */
+    --color-button-hover: #B2682C;              /* tigers-eye */
+    --color-secondary-button: #666D4B;          /* reseda green */
+    --color-overlay: #173125;                   /* dark-green overlay */
+    --color-primary: #B28538;                   /* dark-goldenrod */
+    --color-accent: #E6B44A;                    /* hunyadi-yellow */
   }
 }
 
-@layer components {
-  .btn {
-    background-color: var(--color-button);
-    @apply text-white font-semibold py-2 px-4 rounded text-sm transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-md;
-  }
-
-  .btn:hover {
-    background-color: var(--color-button-hover);
-  }
-
-  .btn-outline {
-    background-color: var(--color-secondary-button);
-    @apply text-white font-semibold rounded text-sm transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-sm;
-  }
-
-  .btn-outline:hover {
-    background-color: var(--color-button-hover);
-  }
-
-  .btn-secondary {
-    background-color: var(--color-secondary-button);
-    @apply text-white font-semibold py-2 px-3 rounded;
-  }
-
-  .btn-secondary:hover {
-    background-color: var(--color-button-hover);
-  }
-
-  .card {
-    background-color: var(--color-container-background);
-    @apply rounded-xl shadow-md transition-all duration-300 ease-in-out hover:scale-[1.01] hover:shadow-lg;
-  }
-
-  .fade-in {
-    opacity: 0;
-    animation: fadeIn 0.6s ease-out forwards;
-    animation-delay: calc(var(--fade-order, 0) * 100ms);
-  }
-
-  .fade-in-down {
-    opacity: 0;
-    transform: translateY(-10px);
-    animation: fadeInDown 0.3s ease-out forwards;
-  }
+@utility btn {
+  background-color: var(--color-button);
+  @apply text-white font-semibold py-2 px-4 rounded-sm text-sm transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-sm;
 }
 
-@layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-out forwards;
-  }
+@utility btn-outline {
+  background-color: var(--color-secondary-button);
+  @apply text-white font-semibold rounded-sm text-sm transition-all duration-200 ease-in-out hover:scale-[1.02] hover:shadow-xs;
+}
+
+@utility btn-secondary {
+  background-color: var(--color-secondary-button);
+  @apply text-white font-semibold py-2 px-3 rounded-sm;
+}
+
+@utility card {
+  background-color: var(--color-container-background);
+  @apply rounded-xl shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.01] hover:shadow-lg;
+}
+
+@utility fade-in {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: calc(var(--fade-order, 0) * 100ms);
+}
+
+@utility fade-in-down {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeInDown 0.3s ease-out forwards;
+}
+
+@utility animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 @keyframes fadeInDown {
