@@ -1,27 +1,31 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>{% block title %}Gretchen North Art{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="{% static 'css/output.css' %}" />
-  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
-  <meta name="description" content="Original art by Gretchen North — curated collections, shop, and stories behind the brush." />
-</head>
-<body class="relative min-h-screen flex flex-col font-sans tracking-tight text-paragraph-text overflow-x-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Gretchen North Art{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{% static 'css/output.css' %}?v=1" />
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
+    <meta name="description" content="Original art by Gretchen North — curated collections, shop, and stories behind the brush." />
+  </head>
+  <body class="relative min-h-screen flex flex-col font-sans tracking-tight text-paragraph-text overflow-x-hidden">
 
-  {% block background %}
-    <div class="fixed inset-0 -z-10 pointer-events-none bg-animated-gradient"></div>
-  {% endblock %}
+    {% block background %}
+      <div class="fixed inset-0 -z-10 pointer-events-none bg-animated-gradient"></div>
+    {% endblock %}
 
-  {% include "partials/navbar.html" %}
+    {% include "partials/navbar.html" %}
 
-  <main class="grow w-full max-w-6xl mx-auto p-6">
-    {% block content %}{% endblock %}
-  </main>
+    <main class="grow w-full max-w-6xl mx-auto p-6">
+      {% block content %}{% endblock %}
+    </main>
 
-  {# {% include "partials/footer.html" %} #}
+    {# {% include "partials/footer.html" %} #}
 
-</body>
+    {% if debug %}
+      <script src="http://localhost:8000/browser-reload/reload.js"></script>
+    {% endif %}
+  </body>
 </html>

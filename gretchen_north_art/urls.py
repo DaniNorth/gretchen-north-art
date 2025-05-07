@@ -21,8 +21,7 @@ from allauth.account.views import LoginView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("artshop.urls")),
-    path("accounts/login/", LoginView.as_view(), name="account_login"),
-    path("accounts/", include("allauth.urls")),
-    path("__reload__/", include("django_browser_reload.urls")),
-]
+    path("", include("artshop.urls")),                   
+    path("accounts/", include("allauth.urls")),           
+    path("__reload__/", include("django_browser_reload.urls")), 
+    ]

@@ -1,6 +1,7 @@
 import os
 import uuid
 import logging
+import json
 from dotenv import load_dotenv
 from django.db.models import Q
 from django.conf import settings
@@ -112,6 +113,7 @@ def cart_view(request):
 
 #Sqaure checkout logic, remember to update the .env sqaure access token to Gretchens once in production
 @login_required
+@require_POST
 def checkout_view(request):
     try:
         cart = request.user.cart
@@ -121,42 +123,57 @@ def checkout_view(request):
             item.artwork.hold(request.user)
 
         if not items.exists():
-            return render(request, "artshop/checkout_error.html", {
+            return JsonResponse({
+                "success": False,
                 "errors": [{"detail": "Your cart is empty."}]
-            })
+            }, status=400)
+
+        # Parse source_id from frontend
+        data = json.loads(request.body)
+        source_id = data.get("source_id")
+
+        if not source_id:
+            return JsonResponse({
+                "success": False,
+                "errors": [{"detail": "Missing source_id from request."}]
+            }, status=400)
+
         total_amount_cents = int(sum(item.artwork.price for item in items) * 100)
-        response = client.payments.create(
-            idempotency_key=str(uuid.uuid4()),
-            source_id="cnon:card-nonce-ok",  # remember to update with Gretchen's real api once live
-            amount_money={
+
+        response = client.payments.create_payment({
+            "idempotency_key": str(uuid.uuid4()),
+            "source_id": source_id,
+            "amount_money": {
                 "amount": total_amount_cents,
                 "currency": "USD"
             },
-            location_id=os.environ.get("SQUARE_LOCATION_ID"),
-            note=f"Purchase by {request.user.username}",
-            autocomplete=True
-        )
-
-        for item in items:
-            item.artwork.mark_sold(request.user)
-            item.delete()
-
-        return render(request, "artshop/checkout_complete.html", {
-            "confirmation": response.payment.id,
+            "location_id": os.environ.get("SQUARE_LOCATION_ID"),
+            "note": f"Purchase by {request.user.username}",
+            "autocomplete": True
         })
 
-    except ApiError as e:
-        logger.error("Square API Error:")
-        for error in e.errors:
-            logger.error(f"{error.category} - {error.code}: {error.detail}")
-        return render(request, "artshop/checkout_error.html", {
-            "errors": [{"detail": error.detail, "code": error.code} for error in e.errors]
-        })
+        if response.is_success():
+            for item in items:
+                item.artwork.mark_sold(request.user)
+                item.delete()
+
+            return JsonResponse({
+                "success": True,
+                "payment_id": response.body["payment"]["id"]
+            })
+
+        else:
+            return JsonResponse({
+                "success": False,
+                "errors": response.errors
+            }, status=400)
+
     except Exception as e:
         logger.exception("Unexpected checkout exception")
-        return render(request, "artshop/checkout_error.html", {
+        return JsonResponse({
+            "success": False,
             "errors": [{"detail": str(e)}]
-        })
+        }, status=500)
     
 @login_required
 def checkout_complete_view(request):

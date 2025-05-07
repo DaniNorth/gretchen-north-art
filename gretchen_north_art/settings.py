@@ -17,30 +17,35 @@ import dj_database_url
 
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+ENV = os.getenv("DJANGO_ENV", "development")
+DEBUG = ENV == "development"
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# hardcoded old key for development. Production key refrenced in .env file. 
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-key-if-missing")
 SQUARE_ACCESS_TOKEN = os.getenv("SQUARE_ACCESS_TOKEN")
 SQUARE_LOCATION_ID = os.getenv("SQUARE_LOCATION_ID")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 RENDER_DOMAIN = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_DOMAIN:
     ALLOWED_HOSTS.append(RENDER_DOMAIN)
 
-# Application definition
-
 INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'widget_tweaks',
+    'cloudinary',
+    'cloudinary_storage',
+    'tailwind',
+    'theme',
+    'artshop',
+    'django_browser_reload',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -48,19 +53,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
     'allauth.socialaccount.providers.instagram',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'cloudinary',
-    'cloudinary_storage',
-    'artshop',
-    'tailwind',
-    'theme',
-    'django_browser_reload',
-    'django.contrib.sites',
 ]
 
 MIDDLEWARE = [
@@ -71,8 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
 
@@ -85,23 +77,17 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'artshop.context_processors.hold_timer', 
+                'artshop.context_processors.hold_timer',
             ],
         },
     },
 ]
 
-
 WSGI_APPLICATION = 'gretchen_north_art.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-ENV = os.getenv("DJANGO_ENV", "development")
 
 DATABASES = {
     "default": dj_database_url.config(
@@ -110,55 +96,32 @@ DATABASES = {
     )
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_DIRS = [
-    BASE_DIR / 'theme' / 'static',
-]
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+STATICFILES_DIRS = [BASE_DIR / 'theme' / 'static']
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  
+
+STATICFILES_STORAGE = (
+    'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    if ENV == "production" else
+    'django.contrib.staticfiles.storage.StaticFilesStorage'
+)
 
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
@@ -167,19 +130,13 @@ CLOUDINARY_STORAGE = {
 
 TAILWIND_APP_NAME = 'theme'
 
-LOGIN_URL = '/accounts/login/'
-
+# Allauth config
 SITE_ID = 1
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # admin login
-    'allauth.account.auth_backends.AuthenticationBackend',  # social auth
-]
-
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_LOGIN_METHODS = {"email"}
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend"
