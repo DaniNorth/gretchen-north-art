@@ -1,25 +1,83 @@
 {% extends "base.html" %}
-{% block title %}Home | Gretchen North Art{% endblock %}
-
 {% block content %}
-<h1 class="text-3xl font-bold text-heading-text mb-6">Featured Artworks</h1>
+<h1 class="text-3xl font-bold mb-6">Featured Artworks</h1>
+<form method="get" class="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center flex-wrap">
+  <input type="text" name="q" value="{{ query }}" placeholder="Search by title or description"
+         class="p-2 border rounded w-full sm:w-1/3 text-sm" />
+  <select name="category" class="p-2 border rounded text-sm">
+    <option value="">All Categories</option>
+    {% for cat in categories %}
+      <option value="{{ cat }}" {% if cat == category %}selected{% endif %}>{{ cat }}</option>
+    {% endfor %}
+  </select>
+  <select name="sort" class="p-2 border rounded text-sm">
+    <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest First</option>
+    <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest First</option>
+    <option value="price_low" {% if sort == "price_low" %}selected{% endif %}>Price: Low to High</option>
+    <option value="price_high" {% if sort == "price_high" %}selected{% endif %}>Price: High to Low</option>
+  </select>
+  <button type="submit" class="btn text-sm">Search</button>
+</form>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
   {% for art in artworks %}
-    <div class="bg-container-background rounded-xl shadow-md overflow-hidden">
-      <img src="{{ art.image.url }}" alt="{{ art.title }}" class="w-full h-60 object-cover">
-      <div class="p-4">
-        <h2 class="text-xl font-semibold text-heading-text mb-1">
-          <a href="{% url 'artwork_detail' art.pk %}" class="hover:underline text-link hover:text-link-hover">
-            {{ art.title }}
-          </a>
-        </h2>
-        <p class="text-subheading text-sm mb-2">{{ art.category }}</p>
-        <p class="text-paragraph-text text-lg font-bold">${{ art.price }}</p>
+    {% if art.pk %}
+      <div class="card fade-in relative overflow-hidden {% if art.is_held and art.held_by != user %}opacity-60 grayscale{% endif %}">
+        {% if art.is_sold %}
+          <div class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
+            SOLD
+          </div>
+        {% endif %}
+        <img src="{{ art.image.url }}" alt="{{ art.title }}" class="w-full h-60 object-cover">
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-heading-text mb-1">
+            <a href="{% url 'artwork_detail' art.pk %}" class="hover:underline text-link hover:text-link-hover">
+              {{ art.title }}
+            </a>
+          </h2>
+          <p class="text-subheading text-sm mb-2">{{ art.category }}</p>
+          <p class="text-paragraph-text text-lg font-bold">${{ art.price }}</p>
+          {% if not art.is_sold %}
+            {% if not art.is_held or art.held_by == user %}
+              {% if user.is_authenticated %}
+                <div class="flex flex-col sm:flex-row gap-2 mt-4">
+
+                    <form method="post" action="{% url 'add_to_cart' art.pk %}" class="w-full sm:w-auto">
+                      {% csrf_token %}
+                      <button type="submit" class="btn w-full sm:w-auto text-sm px-4 py-2">Add to Cart 🛒</button>
+                    </form>
+                    {% if user.wishlists.all %}
+                      <form method="post" action="{% url 'add_to_wishlist' art.pk %}" class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                        {% csrf_token %}
+                        <select name="wishlist_id"
+                                class="text-sm px-3 py-2 border border-border-color rounded bg-white focus:ring-2 focus:ring-primary focus:outline-none">
+                          {% for wishlist in user.wishlists.all %}
+                            <option value="{{ wishlist.id }}">{{ wishlist.title }}</option>
+                          {% endfor %}
+                        </select>
+                        <button type="submit"
+                                class="btn-secondary text-sm px-4 py-2 w-full sm:w-auto hover:scale-[1.02] transition-transform">
+                                  Add ❤️ 
+                        </button>
+                      </form>
+                    {% else %}
+                      <p class="text-sm text-gray-500">Create a wishlist to save items.</p>
+                    {% endif %}
+                </div>
+              {% else %}
+                <a href="{% url 'account_login' %}" class="btn mt-2 block text-center">Log in to save or purchase</a>
+              {% endif %}
+            {% else %}
+              <p class="text-sm text-warning mt-2">On hold by another customer</p>
+            {% endif %}
+          {% endif %}
+        </div>
       </div>
-    </div>
+    {% endif %}
   {% empty %}
-    <p class="text-secondary-subheading">No artworks available right now. Check back soon!</p>
+    <p class="text-sm text-secondary-subheading">No artworks available right now.</p>
   {% endfor %}
 </div>
 {% endblock %}
+
+<!--look into updating with awesomfonts instead of emojis from https://emojipedia.org/artist-palette-->
