@@ -1,0 +1,32 @@
+<form method="post" onsubmit="submitModalForm(event)">
+    {% csrf_token %}
+    <h2 class="text-xl font-semibold mb-4 text-heading-text">{{ title }}</h2>
+    {{ form.as_p }}
+    <button type="submit" class="btn">{{ submit_label|default:"Save" }}</button>
+  </form>
+  
+  <script>
+    function submitModalForm(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+  
+      fetch(form.action || window.location.href, {
+        method: "POST",
+        body: formData,
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          closeModal();
+          showToast(data.toast || "Saved!");
+          window.location.reload();
+        } else {
+          document.getElementById("modal-content").innerHTML = data.html;
+        }
+      });
+    }
+  </script>
+
+<!-- suggestions to include Toast and better ways to reduce redudancies from Chatgpt about 2/3 of this is recommened after I couldn't get modal to work on my own. --!>
